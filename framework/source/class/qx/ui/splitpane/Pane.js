@@ -182,17 +182,6 @@ qx.Class.define("qx.ui.splitpane.Pane",
           this.__setBlockerPosition();
         }, this);
       }
-
-      // resize listener to remove the blocker in case the splitter
-      // is removed.
-      splitter.addListener("resize", function(e) {
-        var bounds = e.getData();
-        if (bounds.height == 0 || bounds.width == 0) {
-          this.__blocker.hide();
-        } else {
-          this.__blocker.show();
-        }
-      }, this);
     },
 
 
@@ -299,13 +288,11 @@ qx.Class.define("qx.ui.splitpane.Pane",
         }
         var left = bounds && bounds.left;
 
-        if (width) {
-          if (isNaN(left)) {
-            left = qx.bom.element.Location.getPosition(splitterElem).left;
-          }
-          this.__blocker.setWidth(offset, width);
-          this.__blocker.setLeft(offset, left);
+        if (isNaN(left)) {
+          left = qx.bom.element.Location.getPosition(splitterElem).left;
         }
+        this.__blocker.setWidth(offset, width ? width : 6);
+        this.__blocker.setLeft(offset, left);
 
       // vertical case
       } else {
@@ -318,13 +305,11 @@ qx.Class.define("qx.ui.splitpane.Pane",
         }
         var top =  bounds && bounds.top;
 
-        if (height) {
-          if (isNaN(top)) {
-            top = qx.bom.element.Location.getPosition(splitterElem).top;
-          }
-          this.__blocker.setHeight(offset, height);
-          this.__blocker.setTop(offset, top);
+        if (isNaN(top)) {
+          top = qx.bom.element.Location.getPosition(splitterElem).top;
         }
+        this.__blocker.setHeight(offset, height ? height : 6);
+        this.__blocker.setTop(offset, top);
       }
     },
 
@@ -413,7 +398,7 @@ qx.Class.define("qx.ui.splitpane.Pane",
       var splitterBounds = splitter.getBounds();
       slider.setUserBounds(
         splitterBounds.left, splitterBounds.top,
-        splitterBounds.width, splitterBounds.height
+        splitterBounds.width ? splitterBounds.width : 6, splitterBounds.height ? splitterBounds.height : 6
       );
 
       slider.setZIndex(splitter.getZIndex() + 1);
